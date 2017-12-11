@@ -3,9 +3,7 @@
 // https://blog.hellojs.org/fetching-api-data-with-react-js-460fe8bbf8f2
 import React, {Component} from 'react';
 import {Rectangle} from 'react-shapes';
-import 'semantic-ui-css/semantic.min.css';
 import './App.css';
-import { Image, Reveal } from 'semantic-ui-react';
 import avatar  from './default.png';
 
 class App extends Component {
@@ -13,9 +11,16 @@ class App extends Component {
         super();
         this.state = {
             profiles: [],
-            urlArray: [],
+            urlArrayOne: [],
             urlArrayTwo: [],
+            groupOne: [avatar,avatar,avatar,avatar,avatar,
+                      avatar,avatar,avatar,avatar,avatar,
+                      avatar,avatar,avatar,avatar,avatar],
+            groupTwo: [avatar,avatar,avatar,avatar,avatar,
+                      avatar,avatar,avatar,avatar,avatar,
+                      avatar,avatar,avatar,avatar,avatar]
         };
+        this.handleOnClick = this.handleOnClick.bind(this)
   }
 
   componentDidMount(){
@@ -34,7 +39,8 @@ class App extends Component {
     if(profiles.length) {
         profiles.sort(() => Math.random() * 2 - 1);
         return profiles.reverse().map((obj, key) => {
-            this.setState({urlArray: [...this.state.urlArray, obj.picture.large]})
+            this.setState({urlArrayOne: [...this.state.urlArrayOne, obj.picture.large]
+            })
         });
     }
   };
@@ -44,29 +50,50 @@ class App extends Component {
     if(profiles.length) {
         profiles.sort(() => Math.random() * 2 - 1);
         return profiles.reverse().map((obj, key) => {
-            this.setState({urlArrayTwo: [...this.state.urlArrayTwo, obj.picture.large]})
+            this.setState({urlArrayTwo: [...this.state.urlArrayTwo, obj.picture
+              .large]})
         })
     }
   };
+  handleOnClick = (e, f) =>{
+    const url = e.obj;
+    const index = f.key;
+    const tryIt =[...this.state.groupOne];
+    tryIt[index] = url;
+      console.log(tryIt);
+    const changeIt = () =>{
+      this.setState({groupOne: tryIt})
+    }
+
+    changeIt();
+  }
+
+  handleOnClickTwo = (e, f) =>{
+    const url = e.obj;
+    const index = f.key;
+    const tryIt =[...this.state.groupTwo];
+    tryIt[index] = url;
+      console.log(tryIt);
+    const changeIt = () =>{
+      this.setState({groupTwo: tryIt})
+    }
+
+    changeIt();
+  }
 
   renderprofiles(){
-    const { urlArray } = this.state;
-    const { urlArrayTwo } = this.state;
-    if(urlArray.length){
+    const { urlArrayOne } = this.state;
+    if(urlArrayOne.length){
       return (
 
-        urlArray.map((obj, key) =>{
+        urlArrayOne.map((obj, key) =>{
           return(
-            <div key={key}>
-              <Reveal animated='move up'>
-                <Reveal.Content visible>
-                  <Image size="small" src={avatar}/>
-                </Reveal.Content>
-                <Reveal.Content hidden>
-                  <Image size="small" src={obj} />
-                </Reveal.Content>
-              </Reveal>
-            </div>
+
+
+              <div key={key}>
+                <img src={this.state.groupOne[key]} onClick={() => this.handleOnClick({obj},{key})}/>
+                {obj}{key}
+              </div>
           )
         })
       )
@@ -81,15 +108,10 @@ class App extends Component {
         urlArrayTwo.map((obj, key) =>{
           return(
 
+
               <div key={key}>
-                <Reveal animated='move up'>
-                  <Reveal.Content visible>
-                    <Image size="small" src={avatar}/>
-                  </Reveal.Content>
-                  <Reveal.Content hidden>
-                    <Image size="small" src={obj}/>
-                  </Reveal.Content>
-                </Reveal>
+                <img src={this.state.groupTwo[key]} onClick={() => this.handleOnClickTwo({obj},{key})}/>
+                {obj}{key}
               </div>
           )
         })
