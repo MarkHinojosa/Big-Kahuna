@@ -1,83 +1,118 @@
-// import React, { Component } from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-//
-// class App extends Component {
-//   render() {
-//     return (
-//       <div className="App">
-//         <header className="App-header">
-//           <img src={logo} className="App-logo" alt="logo" />
-//           <h1 className="App-title">Welcome to React</h1>
-//         </header>
-//         <p className="App-intro">
-//           To get started, edit <code>src/App.js</code> and save to reload.
-//         </p>
-//       </div>
-//     );
-//   }
-// }
-//
-// export default App;
 
-
-
-
-//
+// npm install react-shapes --save
 // https://blog.hellojs.org/fetching-api-data-with-react-js-460fe8bbf8f2
-import React, { Component } from 'react';
-// import 'node_modules/semantic-ui-css/semantic.min.css';
-import logo from './logo.svg';
-
-
+import React, {Component} from 'react';
+import {Rectangle} from 'react-shapes';
+import 'semantic-ui-css/semantic.min.css';
 import './App.css';
+import { Image, Reveal } from 'semantic-ui-react';
+import avatar  from './default.png';
 
-class Background extends Component {
-    constructor() {
+class App extends Component {
+  constructor() {
         super();
-        //set initail state...
         this.state = {
-            pictures: [],
+            profiles: [],
+            urlArray: [],
+            urlArrayTwo: [],
         };
-    }
-// lifecycle method:....
+  }
 
-componentDidMount(){
-  //this is the fetch + api call
-  fetch('https://randomuser.me/api/?results=8')
-  .then(results => {
-      return results.json();
-    }).then(data => {
-        let pictures = data.results.map((pic) => {
-            return(
-                <div>
-                <div class="ui segment" key={pic.results}>
-                   <img class="ui image" src={pic.picture.large} />
-                </div>
-                </div>
-
-
-            )
-        })
-        this.setState({pictures: pictures});
-        console.log("state", this.state.pictures);
+  componentDidMount(){
+    const that = this;
+        fetch('https://randomuser.me/api/?results=15')
+            .then((response) => response.json())
+            .then((responseJson) => {
+            that.setState({profiles: responseJson.results})
+                this.shuffleArray();
+                this.shuffleArrayTwo();
     })
-}
-  //render the data
+  }
+
+  shuffleArray(){
+    const { profiles } = this.state;
+    if(profiles.length) {
+        profiles.sort(() => Math.random() * 2 - 1);
+        return profiles.reverse().map((obj, key) => {
+            this.setState({urlArray: [...this.state.urlArray, obj.picture.large]})
+        });
+    }
+  };
+
+  shuffleArrayTwo(){
+    const { profiles } = this.state;
+    if(profiles.length) {
+        profiles.sort(() => Math.random() * 2 - 1);
+        return profiles.reverse().map((obj, key) => {
+            this.setState({urlArrayTwo: [...this.state.urlArrayTwo, obj.picture.large]})
+        })
+    }
+  };
+
+  renderprofiles(){
+    const { urlArray } = this.state;
+    const { urlArrayTwo } = this.state;
+    if(urlArray.length){
+      return (
+
+        urlArray.map((obj, key) =>{
+          return(
+            <div key={key}>
+              <Reveal animated='move up'>
+                <Reveal.Content visible>
+                  <Image size="small" src={avatar}/>
+                </Reveal.Content>
+                <Reveal.Content hidden>
+                  <Image size="small" src={obj} />
+                </Reveal.Content>
+              </Reveal>
+            </div>
+          )
+        })
+      )
+    }
+  }
+
+  renderprofilesTwo(){
+    const { urlArrayTwo } = this.state;
+    if(urlArrayTwo.length){
+      return (
+
+        urlArrayTwo.map((obj, key) =>{
+          return(
+
+              <div key={key}>
+                <Reveal animated='move up'>
+                  <Reveal.Content visible>
+                    <Image size="small" src={avatar}/>
+                  </Reveal.Content>
+                  <Reveal.Content hidden>
+                    <Image size="small" src={obj}/>
+                  </Reveal.Content>
+                </Reveal>
+              </div>
+          )
+        })
+      )
+    }
+  }
+
+
+
   render() {
     return (
-
-
-      <div className="App-logo" >
-      <div className="Pics" >
-      {/*<div className="App-logo">*/}
-          {this.state.pictures}
-      {/*</div>*/}
+      <div>
+        <div>
+          {this.renderprofiles()}
+        </div>
+        <div>
+          {this.renderprofilesTwo()}
+        </div>
       </div>
-      </div>
 
-    );
+
+
+    )
   }
 }
-
-export default Background;
+export default App;
