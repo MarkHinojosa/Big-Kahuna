@@ -48,10 +48,12 @@ class App extends Component {
         })
     }
   };
-
+handleOnClick(){
+    console.log("Working?");
+}
   renderprofiles(){
     const { urlArray } = this.state;
-    const { urlArrayTwo } = this.state;
+
     if(urlArray.length){
       return (
 
@@ -60,7 +62,7 @@ class App extends Component {
             <div key={key}>
               <Reveal animated='move up'>
                 <Reveal.Content visible>
-                  <Image size="small" src={avatar}/>
+                  <Image onClick ={this.handleOnClick} size="small" src={avatar}/>
                 </Reveal.Content>
                 <Reveal.Content hidden>
                   <Image size="small" src={obj} />
