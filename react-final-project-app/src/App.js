@@ -8,40 +8,50 @@ import avatar  from './default.png';
 
 class App extends Component {
   constructor() {
-        super();
-        this.state = {
-            profiles: [],
-            urlArrayOne: [],
-            urlArrayTwo: [],
-            groupOne: [avatar,avatar,avatar,avatar,avatar,
-                      avatar,avatar,avatar,avatar,avatar,
-                      avatar,avatar,avatar,avatar,avatar],
-            groupTwo: [avatar,avatar,avatar,avatar,avatar,
-                      avatar,avatar,avatar,avatar,avatar,
-                      avatar,avatar,avatar,avatar,avatar]
-        };
-        this.handleOnClick = this.handleOnClick.bind(this)
+    super();
+    this.state = {
+      profiles: [],
+      urlArrayOne: [],
+      urlArrayTwo: [],
+      groupOne: Array(15).fill(avatar),
+      groupTwo: [avatar,avatar,avatar,avatar,avatar,
+                avatar,avatar,avatar,avatar,avatar,
+                avatar,avatar,avatar,avatar,avatar]
+    };
+    this.test = [];
+    this.handleOnClick = this.handleOnClick.bind(this)
   }
 
   componentDidMount(){
     const that = this;
-        fetch('https://randomuser.me/api/?results=15')
-            .then((response) => response.json())
-            .then((responseJson) => {
-            that.setState({profiles: responseJson.results})
-                this.shuffleArray();
-                this.shuffleArrayTwo();
+    fetch('https://randomuser.me/api/?results=15')
+    .then((response) => response.json())
+    .then((responseJson) => responseJson.results)
+    .then(results => {
+      console.log('didmount',results);
+      return results.map((profile) => {
+        return {
+          url: profile.picture.large,
+          shown: false,
+        }
+      })
+      // that.setState({profiles: responseJson.results})
+      // this.shuffleArray();
+      // this.shuffleArrayTwo();
     })
+    .then(newArr => newArr.concat(newArr))
+    .then(doubledArr => console.log(doubledArr))
   }
 
-  shuffleArray(){
+  shuffleArray(arr){
     const { profiles } = this.state;
     if(profiles.length) {
         profiles.sort(() => Math.random() * 2 - 1);
         return profiles.reverse().map((obj, key) => {
-            this.setState({urlArrayOne: [...this.state.urlArrayOne, obj.picture.large]
-            })
-        });
+          this.setState({
+            urlArrayOne: [...this.state.urlArrayOne, obj.picture.large]
+          })
+      });
     }
   };
 
@@ -55,7 +65,9 @@ class App extends Component {
         })
     }
   };
+
   handleOnClick = (e, f) =>{
+    console.log(this.test);
     const url = e.obj;
     const index = f.key;
     const tryIt =[...this.state.groupOne];
@@ -85,15 +97,12 @@ class App extends Component {
     const { urlArrayOne } = this.state;
     if(urlArrayOne.length){
       return (
-
         urlArrayOne.map((obj, key) =>{
           return(
-
-
-              <div key={key}>
-                <img src={this.state.groupOne[key]} onClick={() => this.handleOnClick({obj},{key})}/>
-                {obj}{key}
-              </div>
+            <div key={key}>
+              <img src={this.state.groupOne[key]} onClick={() => this.handleOnClick({obj},{key})}/>
+              {obj}{key}
+            </div>
           )
         })
       )
@@ -104,22 +113,17 @@ class App extends Component {
     const { urlArrayTwo } = this.state;
     if(urlArrayTwo.length){
       return (
-
         urlArrayTwo.map((obj, key) =>{
           return(
-
-
-              <div key={key}>
-                <img src={this.state.groupTwo[key]} onClick={() => this.handleOnClickTwo({obj},{key})}/>
-                {obj}{key}
-              </div>
+            <div key={key}>
+              <img src={this.state.groupTwo[key]} onClick={() => this.handleOnClickTwo({obj},{key})}/>
+              {obj}{key}
+            </div>
           )
         })
       )
     }
   }
-
-
 
   render() {
     return (
@@ -131,9 +135,6 @@ class App extends Component {
           {this.renderprofilesTwo()}
         </div>
       </div>
-
-
-
     )
   }
 }
