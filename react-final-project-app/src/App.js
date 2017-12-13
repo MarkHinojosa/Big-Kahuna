@@ -21,27 +21,41 @@ class App extends Component {
         const that = this;
         fetch('https://randomuser.me/api/?results=15')
             .then((response) => response.json())
-            .then((responseJson) => {
-                that.setState({profiles: responseJson.results})
-                this.shuffleArray();
+            .then((responseJson) => responseJson.results)
+
+            // that.setState({profiles: responseJson.results})
+            // this.shuffleArray();
+            .then(results => {
+                console.log('didmount', results);
+                return results.map((profile) => {
+                    return {
+                        url: profile.picture.large,
+                        shown: false,
+
+                    }
+                })
             })
+                    .then(newArr => newArr.concat(newArr))
+                    .then(doubledArr => console.log(doubledArr))
+
     }
+
     shuffleArray() {
         const {profiles} = this.state;
         if (profiles.length) {
             profiles.sort(() => Math.random() * 2 - 1);
             return profiles.concat(profiles).reverse().map((obj, key) => {
                 this.setState({
-                    urlArrayOne: [...this.state.urlArrayOne, obj.picture.large, ]
+                    urlArrayOne: [...this.state.urlArrayOne, obj.picture.large,]
                 })
             });
         }
     };
 
     handleOnClick = (e, f) => {
-        console.log(e,f)
+        console.log(e, f)
         const {shown} = this.state;
-        if(shown === false){
+        if (shown === false) {
             this.setState({
                 shown: [...true]
             })
@@ -58,8 +72,7 @@ class App extends Component {
             }
             changeIt();
         }
-        }
-
+    }
 
 
     renderprofiles() {
@@ -79,8 +92,8 @@ class App extends Component {
 
     render() {
         return (
-            <div className ="ui container">
-                <div className ="body">
+            <div className="ui container">
+                <div className="body">
                     {this.renderprofiles()}
                 </div>
                 <div>
