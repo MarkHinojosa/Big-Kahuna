@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {Rectangle} from 'react-shapes';
 import './App.css';
-import avatar  from './default.png';
+import avatar from './daftCat.png';
 
 class App extends Component {
     constructor() {
@@ -11,125 +11,80 @@ class App extends Component {
         this.state = {
             profiles: [],
             urlArrayOne: [],
-            urlArrayTwo: [],
-            groupOne: Array(15).fill(avatar),
-            groupTwo: Array(15).fill(avatar),
-            matchArray: Array().fill('')
+            groupOne: Array(30).fill(avatar),
+            // matchArray: Array().fill('')
         };
         this.handleOnClick = this.handleOnClick.bind(this)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         const that = this;
         fetch('https://randomuser.me/api/?results=15')
             .then((response) => response.json())
             .then((responseJson) => {
                 that.setState({profiles: responseJson.results})
                 this.shuffleArray();
-                this.shuffleArrayTwo();
             })
     }
-
-    shuffleArray(){
-        const { profiles } = this.state;
-        if(profiles.length) {
+    shuffleArray() {
+        const {profiles} = this.state;
+        if (profiles.length) {
             profiles.sort(() => Math.random() * 2 - 1);
-            return profiles.reverse().map((obj, key) => {
-                this.setState({urlArrayOne: [...this.state.urlArrayOne, obj.picture.large]
+            return profiles.concat(profiles).reverse().map((obj, key) => {
+                this.setState({
+                    urlArrayOne: [...this.state.urlArrayOne, obj.picture.large, ]
                 })
             });
         }
     };
 
-    shuffleArrayTwo(){
-        const { profiles } = this.state;
-        if(profiles.length) {
-            profiles.sort(() => Math.random() * 2 - 1);
-            return profiles.reverse().map((obj, key) => {
-                this.setState({urlArrayTwo: [...this.state.urlArrayTwo, obj.picture
-                    .large]})
+    handleOnClick = (e, f) => {
+        console.log(e,f)
+        const {shown} = this.state;
+        if(shown === false){
+            this.setState({
+                shown: [...true]
             })
-        }
-    };
-    handleOnClick = (e, f) =>{
-        const url = e.obj;
-        const index = f.key;
-        const tryIt =[...this.state.groupOne];
-        // const match = [...this.state.matchArray];
-        tryIt[index] = url;
-        // match[index] = url;
-        // console.log(tryIt);
-        const changeIt = () =>{
-            this.setState({groupOne: tryIt})
-            // this.setState({matchArray: })
-            this.state.matchArray.push(url)
-            console.log(this.state.matchArray)
-        }
-        changeIt();
+            const url = e.obj;
+            const index = f.key;
+            const tryIt = [...this.state.groupOne];
+            tryIt[index] = url;
+            const changeIt = () => {
+                this.setState({groupOne: tryIt})
+                this.state.matchArray.push(url)
+                console.log(this.state.matchArray)
+                console.log(this.state.urlArrayOne);
 
-    }
-
-    handleOnClickTwo = (e, f) =>{
-        const url = e.obj;
-        const index = f.key;
-        const tryIt =[...this.state.groupTwo];
-        tryIt[index] = url;
-        // console.log(tryIt);
-        const changeIt = () => {
-            this.setState({groupTwo: tryIt});
-            this.state.matchArray.push(url)
-            console.log(this.state.matchArray)
+            }
+            changeIt();
+        }
         }
 
 
 
-        changeIt();
-    }
-
-    renderprofiles(){
-        const { urlArrayOne } = this.state;
-        if(urlArrayOne.length){
+    renderprofiles() {
+        const {urlArrayOne} = this.state;
+        if (urlArrayOne.length) {
             return (
-                urlArrayOne.map((obj, key) =>{
-                    return(
+                urlArrayOne.map((obj, key) => {
+                    return (
                         <div key={key}>
-                            <img src={this.state.groupOne[key]} onClick={() => this.handleOnClick({obj},{key})}/>
-                            {obj}{key}
-
-
+                            <img src={this.state.groupOne[key]} onClick={() => this.handleOnClick({obj}, {key})}/>
                         </div>
                     )
                 })
             )
         }
     }
-
-    renderprofilesTwo(){
-        const { urlArrayTwo } = this.state;
-        if(urlArrayTwo.length){
-            return (
-                urlArrayTwo.map((obj, key) =>{
-                    return(
-                        <div key={key}>
-                            <img src={this.state.groupTwo[key]} onClick={() => this.handleOnClickTwo({obj},{key})}/>
-                            {obj}
-                        </div>
-                    )
-                })
-            )
-        }
-    }
-
-
 
     render() {
         return (
-            <div>
-                <div>
+            <div className ="ui container">
+                <div className ="body">
                     {this.renderprofiles()}
                 </div>
                 <div>
-                    {this.renderprofilesTwo()}
+
                 </div>
             </div>
 
@@ -138,4 +93,5 @@ class App extends Component {
         )
     }
 }
+
 export default App;
