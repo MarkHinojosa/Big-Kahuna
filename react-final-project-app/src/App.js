@@ -9,6 +9,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      currentTurn: 1,
       profiles: [{
           shown: "",
           url: "",
@@ -16,6 +17,7 @@ class App extends Component {
 
     };
     this.handleOnClick = this.handleOnClick.bind(this)
+    const testCopy = this.state.profiles;
   }
   componentDidMount() {
     fetch('https://randomuser.me/api/?results=15')
@@ -27,9 +29,8 @@ class App extends Component {
       return results.map((profile) => {
         return ({
           url: profile.picture.large,
-          shown: avatar,}
-
-        )
+          shown: avatar,
+        })
       })
     })
     .then(doubledArr => this.setState({ profiles: doubledArr }))
@@ -37,31 +38,27 @@ class App extends Component {
 
   handleOnClick = (data, index) => {
     const that = this;
-
-    if(this.state.profiles[index].shown === avatar){
-      const copy = [...that.state.profiles];
-      copy[index].shown = this.state.profiles[index].url;
-      this.setState({profiles: copy})
-      // console.log(copy[index])
-      //   console.log(copy)
-    } else {
-
+    const shownArr = this.state.profiles.map((profileIndex) => profileIndex.shown);
+    const copy = [...that.state.profiles];
+    if(this.state.currentTurn === 1){
+      let localCopy = copy;
+      if(this.state.profiles[index].shown === avatar){
+        localCopy[index].shown = this.state.profiles[index].url;
+        this.setState({ profiles: localCopy })
+        this.setState({currentTurn: 2})
+      }
     }
-    // const {shown} = this.state.profiles[e
-    // if (shown === avatar) {
-    //   this.setState({
-    //     shown: []
-    //   })
-
-    //   const tryIt = [...this.state.groupOne];
-    //   tryIt[index] = url;
-    //   const changeIt = () => {
-    //     this.setState({groupOne: tryIt})
-    //     this.state.matchArray.push(url)
-    //   }
-    //   changeIt();
-    // }
-  }
+    if(this.state.currentTurn === 2 && this.state.profiles[index].shown === avatar ){
+      if(shownArr.includes(data.url)){
+        let localCopy = copy;
+        localCopy[index].shown = this.state.profiles[index].url;
+        this.setState({ profiles: localCopy })
+        alert("MATCH!")} else {
+          //need to reset state back to original
+          console.log("line 57")
+      };
+    }
+}
   renderprofiles() {
     const {profiles} = this.state;
     if (profiles.length) {
@@ -69,8 +66,7 @@ class App extends Component {
         profiles.map((obj, key) => {
           return (
             <div key={key}>
-              <img   src={profiles[key].shown} onClick={() => this.handleOnClick(obj, key)}/>
-
+              <img src={profiles[key].shown} onClick={() => this.handleOnClick(obj, key)}/>
              </div>
           )
         })
@@ -85,11 +81,8 @@ class App extends Component {
           {this.renderprofiles()}
         </div>
       </div>
-
-
-
-        )
-    }
+    )
+  }
 }
 
 export default App;
