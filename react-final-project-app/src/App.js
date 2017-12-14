@@ -9,7 +9,10 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      profiles: [],
+      profiles: [{
+          shown: "",
+          url: "",
+      }],
 
     };
     this.handleOnClick = this.handleOnClick.bind(this)
@@ -25,19 +28,24 @@ class App extends Component {
         return ({
           url: profile.picture.large,
           shown: avatar,}
+
         )
       })
     })
     .then(doubledArr => this.setState({ profiles: doubledArr }))
   }
 
-  handleOnClick = (url, index) => {
+  handleOnClick = (data, index) => {
     const that = this;
-    console.log(index)
+
     if(this.state.profiles[index].shown === avatar){
       const copy = [...that.state.profiles];
-      copy[index] = url;
-      console.log(copy)
+      copy[index].shown = this.state.profiles[index].url;
+      this.setState({profiles: copy})
+      // console.log(copy[index])
+      //   console.log(copy)
+    } else {
+
     }
     // const {shown} = this.state.profiles[e
     // if (shown === avatar) {
@@ -62,7 +70,8 @@ class App extends Component {
           return (
             <div key={key}>
               <img   src={profiles[key].shown} onClick={() => this.handleOnClick(obj, key)}/>
-            </div>
+
+             </div>
           )
         })
       )
