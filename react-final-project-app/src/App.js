@@ -12,6 +12,7 @@ class App extends Component {
       profiles: [{
           shown: "",
           url: "",
+      copyShown: Array().fill('')
       }],
 
     };
@@ -35,18 +36,26 @@ class App extends Component {
     .then(doubledArr => this.setState({ profiles: doubledArr }))
   }
 
-  handleOnClick = (data, index) => {
-    const that = this;
 
+  handleOnClick = (data, index) => {
+    // const that = this;
     if(this.state.profiles[index].shown === avatar){
-      const copy = [...that.state.profiles];
+      const copy = [...this.state.profiles];
       copy[index].shown = this.state.profiles[index].url;
       this.setState({profiles: copy})
-      // console.log(copy[index])
-      //   console.log(copy)
-    } else {
+      console.log(this.state.profiles[index])
+      // console.log(copy)
+      this.state.copyShown.push(copy[index].shown);
+      console.log(this.state.copyShown)
+
+        // if(copy[index].shown.indexOf(this.state.profiles[index]) > -1)
+
+          console.log("happy")
+
+    }else {
 
     }
+
     // const {shown} = this.state.profiles[e
     // if (shown === avatar) {
     //   this.setState({
@@ -61,7 +70,9 @@ class App extends Component {
     //   }
     //   changeIt();
     // }
+
   }
+
   renderprofiles() {
     const {profiles} = this.state;
     if (profiles.length) {
