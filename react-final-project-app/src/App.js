@@ -9,8 +9,6 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      fetched: false,
-      storedProfiles: [],
       currentTurn: 1,
       profiles: [{
           shown: "",
@@ -50,9 +48,10 @@ class App extends Component {
       this.setState({ profiles: copy })
       this.setState({ currentTurn: 2 })
       //why does baseState change???
-      console.log(this.baseState)
+      console.log(this.state.profiles[index].shown)
+
     }
-    if(this.state.currentTurn === 2){
+    if(this.state.currentTurn === 2 && this.state.profiles[index].shown === avatar){
       //shownArrs is mapping through the profiles and making an array of just
       //the shown values
       const shownArrs = this.state.profiles.map((profile) => profile.shown)
@@ -71,11 +70,29 @@ class App extends Component {
         //updating the profiles state to store the new matches
         alert("match")
       } else {
-        alert("not a match")
+        const copy = [...this.state.profiles];
+        copy[index].shown = data.url;
+        this.setState({ profiles: copy })
+        this.state.profiles.map((currentProfile) => {
+          if(currentProfile.shown !== avatar){
+            setTimeout(function(){
+              return currentProfile.shown = avatar}, 100)
+          }
+        })
+        this.setState({currentTurn: 1})
+        this.renderAlert("Not a Match!");
       }
     }
     }
 
+  renderAlert(display) {
+    return(
+
+      <div>
+        <h1> {display}</h1>
+      </div>
+    )
+  }
 
   renderprofiles() {
     const {profiles} = this.state;
@@ -84,7 +101,8 @@ class App extends Component {
         profiles.map((obj, key) => {
           return (
             <div key={key}>
-              <img alt={avatar} src={profiles[key].shown} onClick={() => this.handleOnClick(obj, key)}/>
+              <img alt={avatar} src={profiles[key].shown} onClick={() =>
+                this.handleOnClick(obj, key)}/>{obj.url}
              </div>
           )
         })
@@ -95,6 +113,7 @@ class App extends Component {
     return (
       <div className="ui container">
         <div className="body">
+          {this.renderAlert()}
           {this.renderprofiles()}
         </div>
       </div>
