@@ -46,6 +46,8 @@ class App extends Component {
         localCopy[index].shown = this.state.profiles[index].url;
         this.setState({ profiles: localCopy })
         this.setState({currentTurn: 2})
+        this.setState({copyShown: copy1})
+
       }
     }
     if(this.state.currentTurn === 2 && this.state.profiles[index].shown === avatar ){
