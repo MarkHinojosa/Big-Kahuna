@@ -4,20 +4,23 @@ import React, {Component} from 'react';
 // import {Rectangle} from 'react-shapes';
 import './App.css';
 import avatar from './daftCat.png';
-
+import matchedAvatar from './default.png';
 class App extends Component {
   constructor() {
     super();
     this.state = {
+      fetched: false,
+      storedProfiles: [],
       currentTurn: 1,
       profiles: [{
           shown: "",
           url: "",
+
       }],
 
     };
+    this.baseState = []
     this.handleOnClick = this.handleOnClick.bind(this)
-    const testCopy = this.state.profiles;
   }
   componentDidMount() {
     fetch('https://randomuser.me/api/?results=15')
@@ -33,45 +36,59 @@ class App extends Component {
         })
       })
     })
-    .then(doubledArr => this.setState({ profiles: doubledArr }))
+    .then(doubledArr  => {
+      this.setState({ profiles: doubledArr})
+      this.baseState = doubledArr
+    })
   }
 
   handleOnClick = (data, index) => {
-    const that = this;
-    const shownArr = this.state.profiles.map((profileIndex) => profileIndex.shown);
-    const copy = [...that.state.profiles];
     if(this.state.currentTurn === 1){
-      let localCopy = copy;
-      if(this.state.profiles[index].shown === avatar){
-        localCopy[index].shown = this.state.profiles[index].url;
-        this.setState({ profiles: localCopy })
-        this.setState({currentTurn: 2})
+
+      const copy = [...this.state.profiles];
+      copy[index].shown = data.url;
+      this.setState({ profiles: copy })
+      this.setState({ currentTurn: 2 })
+      //why does baseState change???
+      console.log(this.baseState)
+    }
+    if(this.state.currentTurn === 2){
+      //shownArrs is mapping through the profiles and making an array of just
+      //the shown values
+      const shownArrs = this.state.profiles.map((profile) => profile.shown)
+      if(shownArrs.includes(data.url)){
+        //if the new clicked is found in the shownArrs
+        const matchedCopy = [...this.state.profiles];
+        matchedCopy[index].shown = matchedAvatar;
+        // map through the profiles and find something that is showing
+        // a picture
+        this.state.profiles.map((profile) => {
+          if(profile.shown !== avatar){
+            return profile.shown = matchedAvatar
+          }
+        })
+        this.setState({ profiles: matchedCopy })
+        //updating the profiles state to store the new matches
+        alert("match")
+      } else {
+        alert("not a match")
       }
     }
-    if(this.state.currentTurn === 2 && this.state.profiles[index].shown === avatar ){
-      if(shownArr.includes(data.url)){
-        let localCopy = copy;
-        localCopy[index].shown = this.state.profiles[index].url;
-        this.setState({ profiles: localCopy })
-        alert("MATCH!")} else {
-          //need to reset state back to original
-          console.log("line 57")
-      };
     }
-}
+
+
   renderprofiles() {
     const {profiles} = this.state;
-    if (profiles.length) {
+
       return (
         profiles.map((obj, key) => {
           return (
             <div key={key}>
-              <img src={profiles[key].shown} onClick={() => this.handleOnClick(obj, key)}/>
+              <img alt={avatar} src={profiles[key].shown} onClick={() => this.handleOnClick(obj, key)}/>
              </div>
           )
         })
       )
-    }
   }
 
   render() {
