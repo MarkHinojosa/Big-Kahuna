@@ -12,9 +12,10 @@
     justify-content: center;
     flex-wrap: wrap;
     /*margin-right: 100px;*/
-    margin-right: 75px;
-    margin-left: 75px;
+    /*margin-right: 75px;*/
+    /*margin-left: 75px;*/
     border: solid black 1px;
+    border-radius: 5px;
 }
 .square {
     display: flex;
@@ -41,6 +42,13 @@
     /*margin-top: 1px;*/
     /*margin-right: 1px;*/
     /*margin-left: 1px;*/
+}
+.popUp {
+    display: flex;
+    justify-content: center;
+    /*margin-left: 500px;*/
+    /*position: absolute*/
+
 }
 .App-logo {
     animation: App-logo-spin infinite 20s linear;
