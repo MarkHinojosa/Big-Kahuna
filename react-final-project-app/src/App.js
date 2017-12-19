@@ -12,7 +12,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      // turn: 0,
+      turn: 0,
       currentTurn: 1,
       profiles: [{
         shown: "",
@@ -22,7 +22,7 @@ class App extends Component {
 
     };
     this.baseState = []
-    this.turnCounter = 0;
+    // this.turnCounter = 0;
     this.handleOnClick = this.handleOnClick.bind(this)
   }
 
@@ -73,17 +73,12 @@ class App extends Component {
         this.state.profiles.map((profile) => {
           if (profile.shown !== avatar) {
             return profile.shown = matchedAvatar
-
-
           }
         })
         this.setState({profiles: matchedCopy})
-
         //updating the profiles state to store the new matches
         alert("match")
         this.checkForWin();
-
-
       } else {
         const copy = [...this.state.profiles];
         copy[index].shown = data.url;
@@ -93,11 +88,12 @@ class App extends Component {
             setTimeout(function () {
               return currentProfile.shown = avatar
             }, 100)
-          } this.turnCounter = this.turnCounter ++;
-          console.log(this.turnCounter)
+          }
+          // this.turnCounter = this.turnCounter++;
+          // console.log(this.state.turn)
         })
         this.setState({currentTurn: 1})
-        console.log(this.state.currentTurn)
+        // console.log(this.state.currentTurn)
 
       }
     }
@@ -106,7 +102,6 @@ class App extends Component {
   checkForWin(data) {
     let winningNum = 0
     // console.log('Is this working')
-
     const win = [...this.state.profiles];
     win.map((wins) => {
       if (wins.shown === matchedAvatar) {
@@ -116,23 +111,20 @@ class App extends Component {
       if (winningNum === win.length) {
         alert("Game Won!")
       }
-
     })
   }
-  // turnCounter() {
-  //   let matches = 0
-  //   console.log('what the');
-  //   const turns = [...this.state.profiles];
-  //   turns.map((currentMatch) => {
-  //     // if(currentMatch.shown === matchedAvatar) {
-  //     matches ++;
-  //     console.log('working')
-  //   }
-  // ); return matches/2;
-  // }
+  matchCounter() {
+    let matches = 0
+    const turns = [...this.state.profiles];
+    turns.map((currentMatch) => {
+      if (currentMatch.shown === matchedAvatar) {
+        matches++;
+      }
+    }); return matches / 2;
+  }
+
   renderprofiles() {
     const {profiles} = this.state;
-
     return (
       profiles.map((obj, key) => {
         return (
@@ -145,6 +137,7 @@ class App extends Component {
       })
     )
   }
+
   gameHeader = () => (
     <Segment.Group>
       <Segment size="huge" inverted color="teal" textAlign='center' content='Welcome to the Memory Match' primary/>
@@ -152,12 +145,12 @@ class App extends Component {
   )
   instructionsPopUp = () => (
     <Grid.Column floated="bottom">
-    <Popup
-      trigger={<Button content="Instructions"/>}
-      content="The object of the Memory Match is to try and match as many photos as possible."
-      position="bottom"
-      basic
-    />
+      <Popup
+        trigger={<Button content="Instructions"/>}
+        content="The object of the Memory Match is to try and match as many photos as possible."
+        position="bottom"
+        basic
+      />
     </Grid.Column>
   )
 
@@ -174,8 +167,8 @@ class App extends Component {
         <div className="popUp">
           {this.instructionsPopUp()}
         </div>
-        <div >
-            {/*this is the counter {this.turnCounter()}*/}
+        <div>
+          Match Counter: {this.matchCounter()}
         </div>
       </div>
     )
