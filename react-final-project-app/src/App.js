@@ -17,17 +17,15 @@ class App extends Component {
       profiles: [{
         shown: "",
         url: "",
-
       }],
-
     };
     this.baseState = []
-    this.turnCounter = null;
+    this.turnCounter = 0;
     this.handleOnClick = this.handleOnClick.bind(this)
   }
 
   componentDidMount() {
-    fetch('https://randomuser.me/api/?results=12')
+    fetch('https://randomuser.me/api/?results=1')
       .then((response) => response.json())
       .then((responseJson) => responseJson.results)
       .then(newArr => newArr.concat(newArr))
@@ -48,7 +46,7 @@ class App extends Component {
   }
 
   handleOnClick = (data, index) => {
-  // console.log(index)
+    // console.log(index)
     // console.log(data)
     if (this.state.currentTurn === 1) {
       const copy = [...this.state.profiles];
@@ -58,7 +56,6 @@ class App extends Component {
       this.setState({currentTurn: 2})
       //why does baseState change???
       // console.log(this.state.profiles[index].shown)
-
     }
     if (this.state.currentTurn === 2 && this.state.profiles[index].shown === avatar) {
       // console.log('58')
@@ -85,13 +82,13 @@ class App extends Component {
         alert("match")
         this.checkForWin();
       } else {
-        this.turnCounter= this.turnCounter + 1;
-
+        this.turnCounter = this.turnCounter + 1;
         const copy = [...this.state.profiles];
         copy[index].shown = data.url;
         this.setState({profiles: copy})
         this.state.profiles.map((currentProfile) => {
-          if (currentProfile.shown !== avatar) {
+          console.log(currentProfile)
+          if (currentProfile.shown !== matchedAvatar) {
             setTimeout(function () {
               return currentProfile.shown = avatar
             }, 100)
@@ -101,7 +98,6 @@ class App extends Component {
         })
         this.setState({currentTurn: 1})
         // console.log(this.state.currentTurn)
-
       }
     }
   }
@@ -116,18 +112,34 @@ class App extends Component {
         console.log(winningNum)
       }
       if (winningNum === win.length) {
-        alert("Game Won!")
+        alert("Game Won! Now see if you can improve your score! :)")
       }
     })
   }
+
   matchCounter() {
     let matches = 0
     const turns = [...this.state.profiles];
     turns.map((currentMatch) => {
       if (currentMatch.shown === matchedAvatar) {
-         matches++;
+        matches++;
       }
-    }); return matches / 2;
+    });
+    return matches / 2;
+  }
+
+  ratio () {
+    const scoreRatio = this.turnCounter/this.matchCounter()
+    console.log(scoreRatio)
+    if(scoreRatio > 0) {
+      if(scoreRatio > 100){
+        return "Terrible!"
+      } else {
+        return scoreRatio.toPrecision(3);
+      }
+    }else if (scoreRatio === 0){
+      return "Your score is Perfect!"
+    }
   }
 
   renderprofiles() {
@@ -138,7 +150,6 @@ class App extends Component {
           <div key={key}>
             <img alt={avatar} src={profiles[key].shown} onClick={() =>
               this.handleOnClick(obj, key)}/>
-
           </div>
         )
       })
@@ -154,7 +165,7 @@ class App extends Component {
     <Grid.Column floated="bottom">
       <Popup
         trigger={<Button content="Instructions"/>}
-        content="The object of the Memory Match is to try and match as many photos as possible."
+        content="The object of the Memory Match is to match as many face pairs in the least amount of turns. Try to get the 'turn to match' ratio as low as possible"
         position="bottom"
         basic
       />
@@ -162,7 +173,6 @@ class App extends Component {
   )
 
   render() {
-
     return (
       <div className="ui container">
         {this.gameHeader()}
@@ -176,10 +186,13 @@ class App extends Component {
         </div>
         <div>
           <h3>
-          Match Counter: {this.matchCounter()}
-        </h3>
+            Match Counter: {this.matchCounter()}
+          </h3>
           <h3>
             Incorrect Tries Counter: {this.turnCounter}
+          </h3>
+          <h3>
+            Turn to match ratio: {this.ratio()}
           </h3>
         </div>
       </div>
