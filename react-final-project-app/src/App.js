@@ -150,7 +150,7 @@ class App extends Component {
     <Grid.Column floated="bottom">
     <Popup
       trigger={<Button content="Instructions"/>}
-      content="Try to match as many photos as you can."
+      content="The object of the Memory Match is to try and match as many photos as possible."
       position="bottom"
       basic
     />
