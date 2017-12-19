@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('https://randomuser.me/api/?results=1')
+    fetch('https://randomuser.me/api/?results=15')
       .then((response) => response.json())
       .then((responseJson) => responseJson.results)
       .then(newArr => newArr.concat(newArr))
