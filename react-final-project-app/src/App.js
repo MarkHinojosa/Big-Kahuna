@@ -47,25 +47,29 @@ class App extends Component {
   }
 
   handleOnClick = (data, index) => {
-
+  // console.log(index)
+    // console.log(data)
     if (this.state.currentTurn === 1) {
-
       const copy = [...this.state.profiles];
+      //setting shown to url
       copy[index].shown = data.url;
       this.setState({profiles: copy})
       this.setState({currentTurn: 2})
       //why does baseState change???
-      console.log(this.state.profiles[index].shown)
+      // console.log(this.state.profiles[index].shown)
 
     }
     if (this.state.currentTurn === 2 && this.state.profiles[index].shown === avatar) {
       // console.log('58')
       //shownArrs is mapping through the profiles and making an array of just
       //the shown values
+      //map through and check for a match
       const shownArrs = this.state.profiles.map((profile) => profile.shown)
       this.setState({currentTurn: 1})
+      //.includes finds a match in shownArr
       if (shownArrs.includes(data.url)) {
-        //if the new clicked is found in the shownArrs
+        console.log(shownArrs)
+        //this is only changing the second click into the matched avatar
         const matchedCopy = [...this.state.profiles];
         matchedCopy[index].shown = matchedAvatar;
         // map through the profiles and find something that is showing
@@ -118,7 +122,7 @@ class App extends Component {
     const turns = [...this.state.profiles];
     turns.map((currentMatch) => {
       if (currentMatch.shown === matchedAvatar) {
-        matches++;
+         matches++;
       }
     }); return matches / 2;
   }
