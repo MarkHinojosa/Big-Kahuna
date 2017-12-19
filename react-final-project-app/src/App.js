@@ -22,7 +22,7 @@ class App extends Component {
 
     };
     this.baseState = []
-    // this.turnCounter = 0;
+    this.turnCounter = null;
     this.handleOnClick = this.handleOnClick.bind(this)
   }
 
@@ -44,6 +44,7 @@ class App extends Component {
         this.setState({profiles: doubledArr})
         this.baseState = doubledArr
       })
+      .then(alert("You are about to play a game made by Jon Gorman and Mark Hinojosa, hope you like it!"))
   }
 
   handleOnClick = (data, index) => {
@@ -84,6 +85,8 @@ class App extends Component {
         alert("match")
         this.checkForWin();
       } else {
+        this.turnCounter= this.turnCounter + 1;
+
         const copy = [...this.state.profiles];
         copy[index].shown = data.url;
         this.setState({profiles: copy})
@@ -172,7 +175,12 @@ class App extends Component {
           {this.instructionsPopUp()}
         </div>
         <div>
+          <h3>
           Match Counter: {this.matchCounter()}
+        </h3>
+          <h3>
+            Incorrect Tries Counter: {this.turnCounter}
+          </h3>
         </div>
       </div>
     )
