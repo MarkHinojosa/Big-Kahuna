@@ -14,16 +14,29 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages-deploy -- 'A custom commit message'",
+    "clean-source": "rimraf README.md src webroot package.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).",
+  "description": "Game created by MH and JG",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "gh-pages-deploy": "^0.5.0"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "gh-pages-deploy": {
+    "staticpath": "build",
+    "cname": "https://markhinojosa.github.io/Big-Kahuna/",
+    "prep": [],
+    "commit": "testing",
+    "post": [
+      "clean-source"
+    ],
+    "noprompt": false
+  }
 }
